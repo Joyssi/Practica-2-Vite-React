@@ -4,6 +4,7 @@ import ProtectedRoute from "./assets/components/ProtectedRoute";
 import Login from './assets/views/Login'
 import Encabezado from "./assets/components/Encabezado";
 import Inicio from "./assets/views/Inicio";
+import Categorias from "./assets/views/Categorias"; //Importación de Categorias
 
 import './App.css'
 
@@ -20,6 +21,7 @@ function App() {
                 
                 <Route path="/" element={<Login />} />
                 <Route path="/inicio" element={<ProtectedRoute element={<Inicio />} />} />
+                <Route path="/categorias" element={<ProtectedRoute element={<Categorias />} />}/> //Ruta de Categorias protegida
 
               </Routes>
             </main>
