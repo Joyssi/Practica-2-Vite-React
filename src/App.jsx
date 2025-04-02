@@ -7,6 +7,7 @@ import Inicio from "./assets/views/Inicio";
 import Categorias from "./assets/views/Categorias"; //Importación de Categorias
 import Productos from "./assets/views/Productos"; //Importación de Productos
 import Catalogo from "./assets/views/Catalogo"; //Importación del Catalogo
+import Libros from "./assets/views/Libros"; //Importación de libroa
 
 import './App.css'
 
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/categorias" element={<ProtectedRoute element={<Categorias />} />}/> //Ruta de Categorias protegida
                 <Route path="/productos" element={<ProtectedRoute element={<Productos />} />}/>
                 <Route path="/catalogo" element={<ProtectedRoute element={<Catalogo />} />}/>
+                <Route path="/libros" element={<ProtectedRoute element={<Libros />} />}/>
 
               </Routes>
             </main>
