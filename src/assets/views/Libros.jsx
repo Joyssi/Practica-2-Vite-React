@@ -15,6 +15,7 @@
     import ModalRegistroLibro from "../components/libros/ModalRegistroLibro";
     import ModalEdicionLibro from "../components/libros/ModalEdicionLibro";
     import ModalEliminacionLibro from "../components/libros/ModalEliminacionLibro";
+    import CuadroBusquedas from "../components/busquedas/CuadroBusquedas"; //Importación del componente de búsqueda
     import { useAuth } from "../database/authcontext";
 
     const Libros = () => {
@@ -32,6 +33,8 @@
     const [libroAEliminar, setLibroAEliminar] = useState(null);
     const [pdfFile, setPdfFile] = useState(null);
     const [error, setError] = useState(null);
+    const [librosFiltrados, setLibrosFiltrados] = useState([]);
+    const [searchText, setSearchText] = useState("");
 
     const { isLoggedIn } = useAuth();
     const navigate = useNavigate();
@@ -59,6 +62,20 @@
         fetchData();
         }
     }, [isLoggedIn, navigate]);
+
+    //Hook useEffect para filtrar un libro según el texto de búsqueda
+    const handleSearchChange = (e) => {
+        const text = e.target.value.toLowerCase();
+        setSearchText(text);
+        
+        const filtrados = libros.filter((libro) => 
+            libro.nombre.toLowerCase().includes(text) || 
+            libro.autor.toLowerCase().includes(text) ||
+            libro.genero.toLowerCase().includes(text)
+        );
+    
+        setLibrosFiltrados(filtrados);
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -195,8 +212,13 @@
         <Button className="mb-3" onClick={() => setShowModal(true)}>
             Agregar libro
         </Button>
+        <CuadroBusquedas
+            searchText={searchText}
+            handleSearchChange={handleSearchChange}
+        />
+
         <TablaLibros
-            libros={libros}
+            libros={librosFiltrados}
             openEditModal={openEditModal}
             openDeleteModal={openDeleteModal}
         />
