@@ -53,6 +53,7 @@
             id: doc.id,
         }));
         setLibros(fetchedLibros);
+        setLibrosFiltrados(fetchedLibros) //Inicializa los productos filtrados
         } catch (error) {
         console.error("Error al obtener datos:", error);
         setError("Error al cargar los datos. Intenta de nuevo.");

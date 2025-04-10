@@ -4,7 +4,7 @@
     import { db } from "../database/firebaseconfig";
     import {
     collection,
-    getDocs,
+    onSnapshot,
     addDoc,
     updateDoc,
     deleteDoc,
@@ -40,26 +40,53 @@
 
     // Referencia a la colección de categorías en Firestore
     const categoriasCollection = collection(db, "categorias");
+    const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
-    // Función para obtener todas las categorías de Firestore
-    const fetchCategorias = async () => {
-        try {
-        const data = await getDocs(categoriasCollection);
-        const fetchedCategorias = data.docs.map((doc) => ({
-            ...doc.data(),
-            id: doc.id,
-        }));
-        setCategorias(fetchedCategorias);
-        setCategoriasFiltradas(fetchedCategorias) //Inicializa las categorías filtradas
-        } catch (error) {
-        console.error("Error al obtener las categorías:", error);
-        }
-    };
+    // Función para obtener todas las categorías de Firestore empleando onSnapshot.
+    const fetchCategorias = () => {
+        const stopListening = onSnapshot(categoriasCollection, (snapshot) => {
+            const fetchedCategorias = snapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
+            setCategorias(fetchedCategorias);
+            setCategoriasFiltradas(fetchedCategorias);
+            console.log("Categorías cargadas desde Firestore:", fetchedCategorias);
+            if (isOffline) {
+                console.log("Offline: Mostrando datos desde la caché local.");
+            }
+            }, (error) => {
+            console.error("Error al escuchar categorías:", error);
+            if (isOffline) {
+                console.log("Offline: Mostrando datos desde la caché local.");
+            } else {
+                alert("Error al cargar las categorías: " + error.message);
+            }
+            });
+            return stopListening;
+        };
 
-    // Hook useEffect para carga inicial de datos
-    useEffect(() => {
-        fetchCategorias();
-    }, []);
+        useEffect(() => {
+            const handleOnline = () => {
+                setIsOffline(false);
+                };
+                const handleOffline = () => {
+                setIsOffline(true);
+                };
+                window.addEventListener("online", handleOnline);
+                window.addEventListener("offline", handleOffline);
+                setIsOffline(!navigator.onLine);
+                return () => {
+                window.removeEventListener("online", handleOnline);
+                window.removeEventListener("offline", handleOffline);
+                };
+            }, []);
+
+     // Hook useEffect para carga inicial y escucha de datos
+        useEffect(() => {
+            const cleanupListener = fetchCategorias();
+            return () => cleanupListener();
+        }, []);
 
     // Manejador de cambios en inputs del formulario de nueva categoría
     const handleInputChange = (e) => {
@@ -109,20 +136,61 @@
     };
 
     // Función para actualizar una categoría existente (UPDATE)
-    const handleEditCategoria = async () => {
-        if (!categoriaEditada.nombre || !categoriaEditada.descripcion) {
-        alert("Por favor, completa todos los campos antes de actualizar.");
-        return;
-        }
-        try {
-        const categoriaRef = doc(db, "categorias", categoriaEditada.id);
-        await updateDoc(categoriaRef, categoriaEditada);
-        setShowEditModal(false);
-        await fetchCategorias();
-        } catch (error) {
-        console.error("Error al actualizar la categoría:", error);
-        }
-    };
+        const handleEditCategoria = async () => {
+            if (!categoriaEditada?.nombre || !categoriaEditada?.descripcion) {
+            alert("Por favor, completa todos los campos antes de actualizar.");
+            return;
+            }
+            
+            setShowEditModal(false);
+        
+            const categoriaRef = doc(db, "categorias", categoriaEditada.id);
+        
+            try {
+            // Intentar actualizar en Firestore
+            await updateDoc(categoriaRef, {
+                nombre: categoriaEditada.nombre,
+                descripcion: categoriaEditada.descripcion,
+            });
+        
+            console.log('Red desconectada:', isOffline )
+        
+            if (isOffline) {
+                // Actualizar estado local inmediatamente si no hay conexión
+                setCategorias((prev) =>
+                prev.map((cat) =>
+                    cat.id === categoriaEditada.id ? { ...categoriaEditada } : cat
+                )
+                );
+                setCategoriasFiltradas((prev) =>
+                prev.map((cat) =>
+                    cat.id === categoriaEditada.id ? { ...categoriaEditada } : cat
+                )
+                );
+                console.log("Categoría actualizada localmente (sin conexión).");
+                alert(
+                "Sin conexión: Categoría actualizada localmente. Se sincronizará cuando haya internet."
+                );
+            } else {
+                // Si hay conexión, confirmar éxito en la nube
+                console.log("Categoría actualizada exitosamente en la nube.");
+            }
+            } catch (error) {
+            // Manejar errores inesperados (no relacionados con la red)
+            console.error("Error al actualizar la categoría:", error);
+            setCategorias((prev) =>
+                prev.map((cat) =>
+                cat.id === categoriaEditada.id ? { ...categoriaEditada } : cat
+                )
+            );
+            setCategoriasFiltradas((prev) =>
+                prev.map((cat) =>
+                cat.id === categoriaEditada.id ? { ...categoriaEditada } : cat
+                )
+            );
+            alert("Ocurrió un error al actualizar la categoría: " + error.message);
+            }
+        };
 
     // Función para eliminar una categoría (DELETE)
     const handleDeleteCategoria = async () => {
