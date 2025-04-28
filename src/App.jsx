@@ -7,7 +7,8 @@ import Inicio from "./assets/views/Inicio";
 import Categorias from "./assets/views/Categorias"; //Importación de Categorias
 import Productos from "./assets/views/Productos"; //Importación de Productos
 import Catalogo from "./assets/views/Catalogo"; //Importación del Catalogo
-import Libros from "./assets/views/Libros"; //Importación de libroa
+import Libros from "./assets/views/Libros"; //Importación de libros
+import Clima from "./assets/views/Clima"; //Importación de la vista Clima
 
 import './App.css'
 
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/productos" element={<ProtectedRoute element={<Productos />} />}/>
                 <Route path="/catalogo" element={<ProtectedRoute element={<Catalogo />} />}/>
                 <Route path="/libros" element={<ProtectedRoute element={<Libros />} />}/>
+                <Route path="/clima" element={<ProtectedRoute element={<Clima />} />}/>
 
               </Routes>
             </main>
