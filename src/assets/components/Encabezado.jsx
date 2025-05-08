@@ -4,7 +4,7 @@
     import Nav from "react-bootstrap/Nav";
     import Navbar from "react-bootstrap/Navbar";
     import Offcanvas from "react-bootstrap/Offcanvas";
-    import logo from "../../assets/react.svg";
+    import logo from "../../assets/ferreteria_selva_logo.png";
     import { useAuth } from "../database/authcontext";
     import 'bootstrap-icons/font/bootstrap-icons.css';
     import "../../App.css";
@@ -108,6 +108,14 @@
                     >
                     {isCollapsed ? <i className="bi-cloud-sun-fill me-2"></i> : null}
                     <strong>Clima</strong>
+
+                </Nav.Link>
+                <Nav.Link
+                    onClick={() => handleNavigate("/palabracard")}
+                    className={isCollapsed ? "color-texto-marca" : "text-white"}
+                    >
+                    {isCollapsed ? <i className="bi-cloud-sun-fill me-2"></i> : null}
+                    <strong>Pronunciación</strong>
 
                 </Nav.Link>
 

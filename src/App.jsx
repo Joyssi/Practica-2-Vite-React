@@ -9,6 +9,7 @@ import Productos from "./assets/views/Productos"; //Importación de Productos
 import Catalogo from "./assets/views/Catalogo"; //Importación del Catalogo
 import Libros from "./assets/views/Libros"; //Importación de libros
 import Clima from "./assets/views/Clima"; //Importación de la vista Clima
+import PalabraCard from "./assets/views/Pronunciacion"; //Importación de la vista Pronunciación
 
 import './App.css'
 
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/catalogo" element={<ProtectedRoute element={<Catalogo />} />}/>
                 <Route path="/libros" element={<ProtectedRoute element={<Libros />} />}/>
                 <Route path="/clima" element={<ProtectedRoute element={<Clima />} />}/>
+                <Route path="/palabracard" element={<ProtectedRoute element={<PalabraCard />} />}/>
 
               </Routes>
             </main>
