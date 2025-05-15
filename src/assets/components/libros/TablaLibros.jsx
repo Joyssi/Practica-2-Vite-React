@@ -2,7 +2,7 @@
     import { Table, Button } from "react-bootstrap";
     import "bootstrap-icons/font/bootstrap-icons.css";
 
-    const TablaLibros = ({ libros, openEditModal, openDeleteModal }) => {
+    const TablaLibros = ({ libros, openEditModal, openDeleteModal, openQRModal }) => {
     return (
         <Table striped bordered hover responsive>
         <thead>
@@ -26,6 +26,14 @@
                     Ver PDF
                     </a>
                 )}
+                <Button
+                    variant="outline-dark"
+                    className="ml-1"
+                    size="sm"
+                    onClick={() => openQRModal(libro.pdfUrl)}
+                    >
+                    <i className="bi bi-qr-code"></i>
+                </Button>
                 </td>
                 <td>
                 <Button

@@ -127,6 +127,19 @@
         setProductosFiltrados(filtrados);
     };
 
+    // Método para copiar datos al portapapeles
+    const handleCopy = (producto) => {
+    const rowData = `Nombre: ${producto.nombre}\nPrecio: C$$${producto.precio}\nCategoría: ${producto.categoria}`;
+    navigator.clipboard
+        .writeText(rowData)
+        .then(() => {
+        console.log("Datos de la fila copiados al portapapeles:\n" + rowData);
+        })
+        .catch((err) => {
+        console.error("Error al copiar al portapapeles:", err);
+        });
+    };
+
     // Manejador de cambios en inputs del formulario de nuevo producto
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -369,6 +382,7 @@
             itemsPerPage={itemsPerPage}   // Elementos por página
             currentPage={currentPage}     // Página actual
             setCurrentPage={setCurrentPage} // Método para cambiar página
+            handleCopy={handleCopy} //Método para copiar los elementos de una fila
         />
         <Paginacion
             itemsPerPage={itemsPerPage}
