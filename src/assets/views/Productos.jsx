@@ -1,6 +1,6 @@
     // Importaciones
     import React, { useState, useEffect } from "react";
-    import { Container, Button } from "react-bootstrap";
+    import { Container, Button, Col } from "react-bootstrap";
     import { db } from "../database/firebaseconfig";
     import {
     collection,
@@ -17,6 +17,10 @@
     import ModalEliminacionProducto from "../components/productos/ModalEliminacionProducto";
     import CuadroBusquedas from "../components/busquedas/CuadroBusquedas"; //Importación del componente de búsqueda
     import Paginacion from "../components/ordenamiento/Paginacion";
+    import jsPDF from "jspdf";
+    import autoTable from "jspdf-autotable";
+    import * as XLSX from 'xlsx';
+    import { saveAs } from 'file-saver';
 
     const Productos = () => {
     // Estados para manejo de datos
@@ -120,7 +124,7 @@
         
         const filtrados = productos.filter((producto) => 
             producto.nombre.toLowerCase().includes(text) || 
-            producto.precio.toLowerCase().includes(text) ||
+            producto.precio.toString().toLowerCase().includes(text) ||
             producto.categoria.toLowerCase().includes(text)
         );
     
@@ -362,6 +366,145 @@
         setShowDeleteModal(true);
     };
 
+    const generarPDFProductos = () => {
+        const doc = new jsPDF();
+        //Encabezado
+        doc.setFillColor(28,41,51);
+        doc.rect(0,0,220,30, 'F'); //Ancho completo, alto 30
+        //Titulo centrado con texto blanco
+        doc.setTextColor(255,255, 255); //Color del título
+        doc.setFontSize(28);
+        doc.text("Lista de Productos", doc.internal.pageSize.getWidth()/2,18, {algin: "center"});
+
+        const columnas = ["#", "Nombre", "Precio", "Categoría"];
+        const filas = productosFiltrados.map((producto, index) => [
+            index + 1,
+            producto.nombre,
+            `C$ ${producto.precio}`,
+            producto.categoria,
+        ]);
+
+        //Marcador para mostrar el total de páginas
+        const totalPaginas = "{total_pages_count_string}";
+
+        //Configuración de la tabla
+            autoTable(doc, {
+            head: [columnas],
+            body: filas,
+            startY: 40,
+            theme: "grid",
+            styles: { fontSize: 10, cellPadding: 2 },
+            margin: { top: 20, left: 14, right: 14 },
+            tableWidth: "auto", // Ajuste de ancho automatico
+            columnStyles: {
+                0: { cellWidth: "auto" }, // Ajuste de ancho automatico
+                1: { cellWidth: "auto" },
+                2: { cellWidth: "auto" },
+            },
+            pageBreak: "auto",
+            rowPageBreak: "auto",
+            didDrawPage: function (data) {
+                // Altura y ancho de la página actual
+                const alturaPagina = doc.internal.pageSize.getHeight();
+                const anchoPagina = doc.internal.pageSize.getWidth();
+
+                // Número de página actual
+                const numeroPagina = doc.internal.getNumberOfPages();
+                const totalPaginas = doc.internal.getNumberOfPages(); // Esto debería ser el número total de páginas después de generar la tabla
+
+                // Definir texto de número de página en el centro del documento
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                const piePagina = `Página ${numeroPagina} de ${totalPaginas}`; // Asumo que totalPaginas se definirá correctamente en un contexto más amplio
+                doc.text(piePagina, anchoPagina / 2 + 15, alturaPagina - 10, { align: "center" });
+            },
+            });
+
+        //Actualizar el marcador con el total real de páginas
+        if (typeof doc.putTotalPages === 'function') {
+            doc.putTotalPages(totalPaginas);
+        }
+
+        // Guardar el PDF con un nombre basado en la fecha actual
+        const fecha = new Date();
+        const dia = String(fecha.getDate()).padStart(2, '0');
+        const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+        const anio = fecha.getFullYear();
+        const nombreArchivo = `productos_${dia}${mes}${anio}.pdf`;
+
+        //Guardar documento PDF 
+        doc.save(nombreArchivo);
+    }
+
+    const generarPDFDetalleProducto = (producto) => {
+        const pdf = new jsPDF();
+
+        // Encabezado
+        pdf.setFillColor(28, 41, 51);
+        pdf.rect(0, 0, 220, 30, 'F');
+        pdf.setTextColor(255, 255, 255);
+        pdf.setFontSize(22);
+        pdf.text(producto.nombre, pdf.internal.pageSize.getWidth() / 2, 18, { align: "center" });
+
+        // Imagen centrada (si existe)
+        if (producto.imagen) {
+            const propiedadesImagen = pdf.getImageProperties(producto.imagen);
+            const anchoPagina = pdf.internal.pageSize.getWidth();
+            const anchoImagen = 60;
+            const altoImagen = (propiedadesImagen.height * anchoImagen) / propiedadesImagen.width;
+            const posicionX = (anchoPagina - anchoImagen) / 2;
+            pdf.addImage(producto.imagen, 'JPEG', posicionX, 40, anchoImagen, altoImagen);
+
+            // Datos centrados debajo de la imagen
+            const posicionY = 40 + altoImagen + 10;
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFontSize(14);
+            pdf.text(`Precio: C$ ${producto.precio}`, anchoPagina / 2, posicionY, { align: "center" });
+            pdf.text(`Categoría: ${producto.categoria}`, anchoPagina / 2, posicionY + 10, { align: "center" });
+
+        } else {
+            // Si no hay imagen, mostrar los datos más arriba
+            pdf.setTextColor(0, 0, 0);
+            pdf.setFontSize(14);
+            pdf.text(`Precio: C$ ${producto.precio}`, pdf.internal.pageSize.getWidth() / 2, 50, { align: "center" });
+            pdf.text(`Categoría: ${producto.categoria}`, pdf.internal.pageSize.getWidth() / 2, 60, { align: "center" });
+        }
+
+        pdf.save(`${producto.nombre}.pdf`);
+        };
+
+        const exportarExcelProductos = () => {
+
+            //Estructura de datos para la hoja de Excel
+            const datos = productosFiltrados.map((producto, index) => ({
+                "#": index + 1,
+                Nombre: producto.nombre,
+                Precio: parseFloat(producto.precio),
+                Categoría: producto.categoria,
+            }));
+
+            //Crear hoja y libro Excel
+            const hoja = XLSX.utils.json_to_sheet(datos);
+            const libro = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(libro, hoja, 'Productos');
+
+            //Crear el archivo binario
+            const excelBuffer = XLSX.write(libro, { bookType: 'xlsx', type: 'array'});
+
+            //Guardar el Excel con un nombre basado en la fecha actual
+            const fecha = new Date();
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const anio = fecha.getFullYear();
+
+            const nombreArchivo = `Productos_${dia}${mes}${anio}.xlsx`;
+
+            //Guardar Archivo
+            const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+            saveAs(blob, nombreArchivo);
+        }
+
+
     // Renderizado del componente
     return (
         <Container className="mt-5">
@@ -370,6 +513,28 @@
         <Button className="mb-3" onClick={() => setShowModal(true)}>
             Agregar producto
         </Button>
+        <Col lg={3} md={4} sm={4} xs={5}>
+            <Button
+                className="mb-3"
+                onClick={exportarExcelProductos}
+                variant="secondary"
+                style={{ width: "100%" }}
+            >
+                Generar Excel
+            </Button>
+        </Col>
+
+        <Col lg={3} md={4} sm={4} xs={5}>
+            <Button
+                className="mb-3"
+                onClick={generarPDFProductos}
+                variant="secondary"
+                style={{ width: "100%" }}
+            >
+                Generar reporte PDF
+            </Button>
+        </Col>
+
         <CuadroBusquedas
             searchText={searchText}
             handleSearchChange={handleSearchChange}
@@ -383,6 +548,7 @@
             currentPage={currentPage}     // Página actual
             setCurrentPage={setCurrentPage} // Método para cambiar página
             handleCopy={handleCopy} //Método para copiar los elementos de una fila
+            generarPDFDetalleProducto={generarPDFDetalleProducto}
         />
         <Paginacion
             itemsPerPage={itemsPerPage}
