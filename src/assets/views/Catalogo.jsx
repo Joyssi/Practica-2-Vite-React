@@ -4,6 +4,7 @@
     import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
     import TarjetaProducto from "../components/catalogo/TarjetaProducto";
     import ModalEdicionProducto from "../components/productos/ModalEdicionProducto";
+    import { useTranslation } from "react-i18next";
 
     const Catalogo= () => {
     const [productos, setProductos] = useState([]);
@@ -15,6 +16,12 @@
 
     const productosCollection = collection(db, "productos");
     const categoriasCollection = collection(db, "categorias");
+
+    const { t, i18n } = useTranslation();
+
+    const cambiarIdioma = (lang) => {
+    i18n.changeLanguage(lang);
+    };
 
     const fetchData = async () => {
         try {
@@ -90,17 +97,17 @@
     return (
         <Container className="mt-5">
         <br />
-        <h4>Catálogo de Productos</h4>
+        <h4>{t('menu.catalogoProductos')}</h4>
         {/* Filtro de categorías */}
         <Row>
             <Col lg={3} md={3} sm={6}>
             <Form.Group className="mb-3">
-                <Form.Label>Filtrar por categoría:</Form.Label>
+                <Form.Label>{t('menu.filtrarPorCategoria')}</Form.Label>
                 <Form.Select
                 value={categoriaSeleccionada}
                 onChange={(e) => setCategoriaSeleccionada(e.target.value)}
                 >
-                <option value="Todas">Todas</option>
+                <option value="Todas">{t('menu.todas')}</option>
                 {categorias.map((categoria) => (
                     <option key={categoria.id} value={categoria.nombre}>
                     {categoria.nombre}

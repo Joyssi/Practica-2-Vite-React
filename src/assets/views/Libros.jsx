@@ -19,6 +19,7 @@
     import { useAuth } from "../database/authcontext";
     import Paginacion from "../components/ordenamiento/Paginacion";
     import ModalQR from "../components/qr/ModalQR"; //Importación del componente QR
+    import { useTranslation } from "react-i18next";
 
     const Libros = () => {
     const [libros, setLibros] = useState([]);
@@ -48,6 +49,12 @@
     const navigate = useNavigate();
 
     const librosCollection = collection(db, "libros");
+
+    const { t, i18n } = useTranslation();
+
+    const cambiarIdioma = (lang) => {
+    i18n.changeLanguage(lang);
+    };
 
     const fetchData = async () => {
         try {
@@ -232,10 +239,10 @@
     return (
         <Container className="mt-5">
         <br />
-        <h4>Gestión de Libros</h4>
+        <h4>{t('menu.gestionLibros')}</h4>
         {error && <Alert variant="danger">{error}</Alert>}
         <Button className="mb-3" onClick={() => setShowModal(true)}>
-            Agregar libro
+            {t('menu.agregarLibro')}
         </Button>
         <CuadroBusquedas
             searchText={searchText}

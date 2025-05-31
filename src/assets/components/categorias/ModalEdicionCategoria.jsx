@@ -1,5 +1,6 @@
     import React from "react";
     import { Modal, Form, Button } from "react-bootstrap";
+    import { useTranslation } from 'react-i18next';
 
     const ModalEdicionCategoria = ({
     showEditModal,
@@ -10,42 +11,46 @@
     }) => {
     if (!categoriaEditada) return null;
 
+        const { t, i18n } = useTranslation();
+            
+                const cambiarIdioma = (lang) => {
+                i18n.changeLanguage(lang);
+                };
+
     return (
         <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
         <Modal.Header closeButton>
-            <Modal.Title>Editar Categoría</Modal.Title>
+            <Modal.Title>{t('menu.editarCategoria')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form>
             <Form.Group className="mb-3">
-                <Form.Label>Nombre</Form.Label>
+                <Form.Label>{t('menu.nombre')}</Form.Label>
                 <Form.Control
                 type="text"
                 name="nombre"
                 value={categoriaEditada.nombre}
                 onChange={handleEditInputChange}
-                placeholder="Ingresa el nombre"
                 />
             </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label>Descripción</Form.Label>
+                <Form.Label>{t('menu.descripcion')}</Form.Label>
                 <Form.Control
                 as="textarea"
                 rows={3}
                 name="descripcion"
                 value={categoriaEditada.descripcion}
                 onChange={handleEditInputChange}
-                placeholder="Ingresa la descripción"
                 />
             </Form.Group>
             </Form>
         </Modal.Body>
         <Modal.Footer>
             <Button variant="secondary" onClick={() => setShowEditModal(false)}>
-            Cancelar
+            {t('menu.guardar')}
             </Button>
             <Button variant="primary" onClick={handleEditCategoria}>
-            Actualizar
+            {t('menu.actualizar')}
             </Button>
         </Modal.Footer>
         </Modal>

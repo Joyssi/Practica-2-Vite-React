@@ -1,17 +1,25 @@
     import React from "react";
     import { Table, Button, Image } from "react-bootstrap";
     import "bootstrap-icons/font/bootstrap-icons.css";
+    import { useTranslation } from "react-i18next";
 
     const TablaProductos = ({ productos, openEditModal, openDeleteModal, handleCopy, generarPDFDetalleProducto }) => {
+
+        const { t, i18n } = useTranslation();
+
+        const cambiarIdioma = (lang) => {
+        i18n.changeLanguage(lang);
+        };
+
     return (
         <Table striped bordered hover responsive>
         <thead>
             <tr>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Acciones</th>
+            <th>{t('menu.imagen')}</th>
+            <th>{t('menu.nombre')}</th>
+            <th>{t('menu.precio')}</th>
+            <th>{t('menu.categoria')}</th>
+            <th>{t('menu.acciones')}</th>
             </tr>
         </thead>
         <tbody>
@@ -29,7 +37,7 @@
                 <Button
                     variant="outline-warning"
                     size="sm"
-                    className="me-2"
+                    className="me-2 mt-2"
                     onClick={() => openEditModal(producto)}
                 >
                     <i className="bi bi-pencil"></i>
@@ -37,7 +45,7 @@
                 <Button
                 variant="outline-secondary"
                 size="sm"
-                className="me-2"
+                className="me-2 mt-2"
                 onClick={() => generarPDFDetalleProducto(producto)}
                 >
                     <i className="bi bi-filetype-pdf"></i>
@@ -45,6 +53,7 @@
                 <Button
                     variant="outline-danger"
                     size="sm"
+                    className="me-2 mt-2"
                     onClick={() => openDeleteModal(producto)}
                 >
                     <i className="bi bi-trash"></i>
@@ -52,6 +61,7 @@
                 <Button
                     variant="outline-info"
                     size="sm"
+                    className="me-2 mt-2"
                     onClick={() => handleCopy(producto)}
                     >
                     <i className="bi bi-clipboard"></i>

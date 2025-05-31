@@ -2,6 +2,7 @@
     import React, { useState, useEffect } from 'react';
     import { Container, Button } from "react-bootstrap";
     import ModalInstalacionIOS from "../components/inicio/ModalInstalacionIOS";
+    import { useTranslation } from 'react-i18next';
 
     const Inicio = () => {
     const navigate = useNavigate();
@@ -9,23 +10,22 @@
     const [solicitudInstalacion, setSolicitudInstalacion] = useState(null);
     const [mostrarBotonInstalacion, setMostrarBotonInstalacion] = useState(false);
     const [esDispositivoIOS, setEsDispositivoIOS] = useState(false);
-    const [mostrarModalInstrucciones, setMostrarModalInstrucciones] = useState(false); // corregido
+    const [mostrarModalInstrucciones, setMostrarModalInstrucciones] = useState(false);
 
-    const abrirModalInstrucciones = () => setMostrarModalInstrucciones(true); // corregido
-    const cerrarModalInstrucciones = () => setMostrarModalInstrucciones(false); // corregido
+    const abrirModalInstrucciones = () => setMostrarModalInstrucciones(true);
+    const cerrarModalInstrucciones = () => setMostrarModalInstrucciones(false);
 
-    // Función de navegación
     const handleNavigate = (path) => {
         navigate(path);
     };
 
-    // Detectar dispositivo iOS
+    const { t } = useTranslation();
+
     useEffect(() => {
         const esIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         setEsDispositivoIOS(esIOS);
     }, []);
 
-    // Manejar evento beforeinstallprompt
     useEffect(() => {
         const manejarSolicitudInstalacion = (evento) => {
         evento.preventDefault();
@@ -59,15 +59,27 @@
         <div>
         <br />
         <br />
-        <h1>Inicio</h1>
+        <h1>{t('menu.inicio')}</h1>
 
         <Container className="my-3">
-            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/categorias")}>Ir a Categorías</Button>
-            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/productos")}>Ir a Productos</Button>
-            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/catalogo")}>Ir a Catálogo</Button>
-            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/libros")}>Ir a Libros</Button>
-            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/clima")}>Ir a Clima</Button>
-            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/palabracard")}>Ir a Pronunciación</Button>
+            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/categorias")}>
+            {t('menu.irACategorias')}
+            </Button>
+            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/productos")}>
+            {t('menu.irAProductos')}
+            </Button>
+            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/catalogo")}>
+            {t('menu.irACatalogo')}
+            </Button>
+            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/libros")}>
+            {t('menu.irALibros')}
+            </Button>
+            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/clima")}>
+            {t('menu.irAClima')}
+            </Button>
+            <Button className="m-2" variant="secondary" onClick={() => handleNavigate("/palabracard")}>
+            {t('menu.irAPronunciacion')}
+            </Button>
         </Container>
 
         {!esDispositivoIOS && mostrarBotonInstalacion && (

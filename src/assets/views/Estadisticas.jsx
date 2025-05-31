@@ -3,10 +3,17 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../database/firebaseconfig';
 import GraficoProductos from '../components/estadisticas/GraficoProductos';
+import { useTranslation } from "react-i18next";
 
 const Estadisticas = () => {
     const [productos, setProductos] = useState([]);
     const productosColletion = collection(db, 'productos');
+
+    const { t, i18n } = useTranslation();
+    
+        const cambiarIdioma = (lang) => {
+        i18n.changeLanguage(lang);
+        };
 
     useEffect(() => {
         const unsubscribe = onSnapshot(productosColletion, (snapshot) => {
@@ -28,7 +35,7 @@ const Estadisticas = () => {
 
     return (
         <Container className="mt-5">
-            <h4>Estadísticas</h4>
+            <h4>{t('menu.estadisticas')}</h4>
             <Row className='mt-4'>
                 <Col xs={12} lg={6} className='mb-4'>
                     <GraficoProductos nombres={nombres} precios={precios} />

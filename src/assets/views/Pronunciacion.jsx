@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import PalabraCard from "../components/pronunciacion/PalabraCard";
+import { useTranslation } from "react-i18next";
 
 const Pronunciacion = () => {
     const SpeechRecognition =
@@ -15,6 +16,12 @@ const Pronunciacion = () => {
     const [resultado, setResultado] = useState(null);
     const [escuchando, setEscuchando] = useState(false);
     const [error, setError] = useState("");
+
+    const { t, i18n } = useTranslation();
+
+    const cambiarIdioma = (lang) => {
+    i18n.changeLanguage(lang);
+    };
 
     useEffect(() => {
         generarNuevaPalabra();
@@ -84,7 +91,7 @@ const Pronunciacion = () => {
 
     return (
         <Container className="mt-5">
-            <h2 className="text-center">Ejercicio de Pronunciación</h2>
+            <h2 className="text-center">{t('menu.ejercicioPronunciacion')}</h2>
             <PalabraCard
                 palabra={palabraActual}
                 escuchando={escuchando}

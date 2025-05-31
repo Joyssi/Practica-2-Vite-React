@@ -1,17 +1,25 @@
     import React from "react";
     import { Table, Button } from "react-bootstrap";
     import "bootstrap-icons/font/bootstrap-icons.css";
+    import { useTranslation } from "react-i18next";
 
     const TablaLibros = ({ libros, openEditModal, openDeleteModal, openQRModal }) => {
+
+        const { t, i18n } = useTranslation();
+
+        const cambiarIdioma = (lang) => {
+        i18n.changeLanguage(lang);
+        };
+
     return (
         <Table striped bordered hover responsive>
         <thead>
             <tr>
-            <th>Nombre</th>
-            <th>Autor</th>
-            <th>Género</th>
+            <th>{t('menu.nombre')}</th>
+            <th>{t('menu.autor')}</th>
+            <th>{t('menu.genero')}</th>
             <th>PDF</th>
-            <th>Acciones</th>
+            <th>{t('menu.acciones')}</th>
             </tr>
         </thead>
         <tbody>

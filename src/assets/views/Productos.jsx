@@ -21,6 +21,7 @@
     import autoTable from "jspdf-autotable";
     import * as XLSX from 'xlsx';
     import { saveAs } from 'file-saver';
+    import { useTranslation } from "react-i18next";
 
     const Productos = () => {
     // Estados para manejo de datos
@@ -48,6 +49,12 @@
     const categoriasCollection = collection(db, "categorias");
 
     const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
+    const { t, i18n } = useTranslation();
+
+    const cambiarIdioma = (lang) => {
+    i18n.changeLanguage(lang);
+    };
 
     // Función para obtener todas las categorías y productos de Firestore
         const fetchData = () => {
@@ -509,9 +516,9 @@
     return (
         <Container className="mt-5">
         <br />
-        <h4>Gestión de Productos</h4>
+        <h4>{t('menu.gestionProductos')}</h4>
         <Button className="mb-3" onClick={() => setShowModal(true)}>
-            Agregar producto
+            {t('menu.agregarProducto')}
         </Button>
         <Col lg={3} md={4} sm={4} xs={5}>
             <Button
@@ -520,7 +527,7 @@
                 variant="secondary"
                 style={{ width: "100%" }}
             >
-                Generar Excel
+                {t('menu.generarExcel')}
             </Button>
         </Col>
 
@@ -531,7 +538,7 @@
                 variant="secondary"
                 style={{ width: "100%" }}
             >
-                Generar reporte PDF
+                {t('menu.generarReportePDF')}
             </Button>
         </Col>
 

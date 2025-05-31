@@ -1,5 +1,6 @@
     import React from "react";
     import { Modal, Form, Button } from "react-bootstrap";
+    import { useTranslation } from 'react-i18next';
 
     const ModalRegistroCategoria = ({
     showModal,
@@ -8,42 +9,49 @@
     handleInputChange,
     handleAddCategoria,
     }) => {
+
+        const { t, i18n } = useTranslation();
+        
+            const cambiarIdioma = (lang) => {
+            i18n.changeLanguage(lang);
+            };
+
     return (
         <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-            <Modal.Title>Agregar Categoría</Modal.Title>
+            <Modal.Title>{t('menu.agregarCategoria')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form>
             <Form.Group className="mb-3">
-                <Form.Label>Nombre</Form.Label>
+                <Form.Label>{t('menu.nombre')}</Form.Label>
                 <Form.Control
                 type="text"
                 name="nombre"
                 value={nuevaCategoria.nombre}
                 onChange={handleInputChange}
-                placeholder="Ingresa el nombre"
+                placeholder={t('menu.ingresaNombre')}
                 />
             </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label>Descripción</Form.Label>
+                <Form.Label>{t('menu.descripcion')}</Form.Label>
                 <Form.Control
                 as="textarea"
                 rows={3}
                 name="descripcion"
                 value={nuevaCategoria.descripcion}
                 onChange={handleInputChange}
-                placeholder="Ingresa la descripción"
+                placeholder={t('menu.ingresaDescripcion')}
                 />
             </Form.Group>
             </Form>
         </Modal.Body>
         <Modal.Footer>
             <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
+            {t('menu.cancelar')}
             </Button>
             <Button variant="primary" onClick={handleAddCategoria}>
-            Guardar
+            {t('menu.guardar')}
             </Button>
         </Modal.Footer>
         </Modal>

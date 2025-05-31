@@ -1,5 +1,6 @@
     import React from "react";
     import { Form, Button, Row, Col } from "react-bootstrap";
+    import { useTranslation } from "react-i18next";
 
     const FormularioUbicacion = ({
     ubicacionManual,
@@ -8,14 +9,21 @@
     manejarCambioModo,
     manejarObtenerClima,
     }) => {
+
+    const { t, i18n } = useTranslation();
+
+    const cambiarIdioma = (lang) => {
+    i18n.changeLanguage(lang);
+    };
+    
     return (
         <Form onSubmit={manejarObtenerClima} >
-        <h5>Seleccionar Ubicación</h5>
+        <h5>{t('menu.seleccionarUbicacion')}</h5>
         <Row className="mb-3">
             <Col xs={12} sm={12} md={3} lg={3}>
             <Form.Check
                 type="radio"
-                label="Ubicación Automática"
+                label={t('menu.ubicacionAutomatica')}
                 name="modoUbicacion"
                 value="automatica"
                 checked={modoUbicacion === "automatica"}
@@ -23,7 +31,7 @@
             />
             <Form.Check
                 type="radio"
-                label="Ubicación Manual"
+                label={t('menu.ubicacionManual')}
                 name="modoUbicacion"
                 value="manual"
                 checked={modoUbicacion === "manual"}
@@ -32,7 +40,7 @@
             </Col>
             <Col xs={12} sm={12} md={4} lg={4}>
             <Form.Group controlId="latitud">
-                <Form.Label>Latitud</Form.Label>
+                <Form.Label>{t('menu.latitud')}</Form.Label>
                 <Form.Control
                 type="text"
                 name="latitud"
@@ -45,7 +53,7 @@
             </Col>
             <Col xs={12} sm={12} md={4} lg={4} className="mb-3">
             <Form.Group controlId="longitud">
-                <Form.Label>Longitud</Form.Label>
+                <Form.Label>{t('menu.longitud')}</Form.Label>
                 <Form.Control
                 type="text"
                 name="longitud"
@@ -58,7 +66,7 @@
             </Col>
             <Col xs={12} sm={12} md={1} lg={1} className="d-flex align-items-end justify-content-center mb-3">
             <Button variant="primary" type="submit">
-                Cargar
+                {t('menu.cargar')}
             </Button>
             </Col>
         </Row>

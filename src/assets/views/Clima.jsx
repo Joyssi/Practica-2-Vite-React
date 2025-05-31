@@ -2,6 +2,7 @@
     import { Container, Row, Col } from "react-bootstrap";
     import FormularioUbicacion from "../components/clima/FormularioUbicacion";
     import TablaClima from "../components/clima/TablaClima";
+    import { useTranslation } from "react-i18next";
 
     const Clima = () => {
     const [ubicacion, setUbicacion] = useState({
@@ -18,6 +19,12 @@
         latitud: "",
         longitud: "",
     });
+
+    const { t, i18n } = useTranslation();
+
+    const cambiarIdioma = (lang) => {
+    i18n.changeLanguage(lang);
+    };
 
     const [modoUbicacion, setModoUbicacion] = useState("automatica");
 
@@ -147,7 +154,7 @@
     return (
         <Container className="mt-5">
         <br />
-        <h4>Clima por Hora</h4>
+        <h4>{t('menu.climaPorHora')}</h4>
         <br />
         <FormularioUbicacion
             ubicacionManual={ubicacionManual}
