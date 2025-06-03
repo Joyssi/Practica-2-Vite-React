@@ -77,7 +77,16 @@ i18n
                     actualizar: "Update",
                     smsEliminar: "Are you sure you want to delete this category?",
                     confirmacion: "Confirm Deletion",
-                    eliminar: "Delete"
+                    eliminar: "Delete",
+                    empleado: "Employees",
+                    correo: "Email",
+                    gestionEmpleados: "Employee Management",
+                    apellido: "Last Name",
+                    telefono: "Phone",
+                    cedula: "ID Number",
+                    fechaNacimiento: "Date of Birth",
+                    agregarEmpleado: "Add Employee",
+                    titulo: "Pharmacy"
                 }
             }
         },
@@ -147,7 +156,16 @@ i18n
                     actualizar: "Actualizar",
                     smsEliminar: "¿Estás seguro de que deseas eliminar esta categoría?",
                     confirmacion: "Confirmar Eliminacion",
-                    eliminar: "Eliminar"
+                    eliminar: "Eliminar",
+                    empleado: "Empleados",
+                    correo: "Correo",
+                    gestionEmpleados: "Gestión de Empleados",
+                    apellido: "Apellido",
+                    telefono: "Teléfono",
+                    cedula: "Cédula",
+                    fechaNacimiento: "Fecha de Nacimiento",
+                    agregarEmpleado: "Agregar Empleado",
+                    titulo: "Farmacia"
                 }
             }
         }

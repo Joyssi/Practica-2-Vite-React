@@ -52,7 +52,7 @@
                 height="30"
                 className="d-inline-block align-top"
             />{" "}
-            <strong>{t('brand.name')}</strong>
+            <strong>{t('menu.titulo')}</strong>
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="offcanvasNavbar-expand-sm" onClick={handleToggle} />
             <Navbar.Offcanvas
@@ -67,7 +67,7 @@
                 id="offcanvasNavbarLabel-expand-sm"
                 className={isCollapsed ? "color-texto-marca" : "text-white"}
                 >
-                {t('menu.title')}
+                {t('menu.titulo')}
                 </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
@@ -91,6 +91,10 @@
                 <Nav.Link onClick={() => handleNavigate("/libros")} className={isCollapsed ? "color-texto-marca" : "text-white"}>
                     {isCollapsed && <i className="bi-house-door-fill me-2"></i>}
                     <strong>{t('menu.libros')}</strong>
+                </Nav.Link>
+                <Nav.Link onClick={() => handleNavigate("/empleados")} className={isCollapsed ? "color-texto-marca" : "text-white"}>
+                    {isCollapsed && <i className="bi-house-door-fill me-2"></i>}
+                    <strong>{t('menu.empleado')}</strong>
                 </Nav.Link>
                 <Nav.Link onClick={() => handleNavigate("/clima")} className={isCollapsed ? "color-texto-marca" : "text-white"}>
                     {isCollapsed && <i className="bi-cloud-sun-fill me-2"></i>}
@@ -122,7 +126,6 @@
             title={
                 <span>
                 <i className="bi-translate me-2"></i>
-                <span>{t('menu.idioma')}</span>
                 </span>
             }
             id="basic-nav-dropdown"

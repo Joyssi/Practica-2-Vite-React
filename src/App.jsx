@@ -11,6 +11,7 @@ import Libros from "./assets/views/Libros"; //Importación de libros
 import Clima from "./assets/views/Clima"; //Importación de la vista Clima
 import PalabraCard from "./assets/views/Pronunciacion"; //Importación de la vista Pronunciación
 import Graficos from "./assets/views/Estadisticas"; //Importaci+on de las estadísticas
+import Empleados from "./assets/views/Empleados"; //Importación de la vista empleados
 
 import './App.css'
 
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/clima" element={<ProtectedRoute element={<Clima />} />}/>
                 <Route path="/palabracard" element={<ProtectedRoute element={<PalabraCard />} />}/>
                 <Route path="/graficos" element={<ProtectedRoute element={<Graficos />} />}/>
+                <Route path="/empleados" element={<ProtectedRoute element={<Empleados />} />}/>
 
               </Routes>
             </main>
